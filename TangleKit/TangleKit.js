@@ -131,6 +131,7 @@ Tangle.classes.TKNumberField = {
 //  Attributes:  data-min (optional): minimum value
 //               data-max (optional): maximum value
 //               data-step (optional): granularity of adjustment (can be fractional)
+//               data-scale (optional): rate of drag movements
 
 var isAnyAdjustableNumberDragging = false;  // hack for dragging one value over another one
 
@@ -144,6 +145,7 @@ Tangle.classes.TKAdjustableNumber = {
         this.min = (options.min !== undefined) ? parseFloat(options.min) : 0;
         this.max = (options.max !== undefined) ? parseFloat(options.max) : 1e100;
         this.step = (options.step !== undefined) ? parseFloat(options.step) : 1;
+        this.scale = (options.scale !== undefined) ? parseFloat(options.scale) : 1/5;
         
         this.initializeHover();
         this.initializeHelp();
@@ -217,7 +219,7 @@ Tangle.classes.TKAdjustableNumber = {
     },
     
     touchDidMove: function (touches) {
-        var value = this.valueAtMouseDown + touches.translation.x / 5 * this.step;
+        var value = this.valueAtMouseDown + touches.translation.x * this.scale * this.step;
         value = ((value / this.step).round() * this.step).limit(this.min, this.max);
         this.tangle.setValue(this.variable, value);
         this.updateHelp();
