@@ -146,6 +146,7 @@ Tangle.classes.TKAdjustableNumber = {
         this.max = (options.max !== undefined) ? parseFloat(options.max) : 1e100;
         this.step = (options.step !== undefined) ? parseFloat(options.step) : 1;
         this.scale = (options.scale !== undefined) ? parseFloat(options.scale) : 1/5;
+        this.digits = (""+this.step).split('.')[1].length;
         
         this.initializeHover();
         this.initializeHelp();
@@ -220,8 +221,8 @@ Tangle.classes.TKAdjustableNumber = {
     
     touchDidMove: function (touches) {
         var value = this.valueAtMouseDown + touches.translation.x * this.scale * this.step;
-        value = ((value / this.step).round() * this.step).limit(this.min, this.max);
-        this.tangle.setValue(this.variable, value);
+        value = ((value / this.step).round() * this.step).limit(this.min, this.max).toFixed(this.digits);
+        this.tangle.setValue(this.variable, parseFloat(value, 10));
         this.updateHelp();
     },
     
